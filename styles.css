@@ -1,8 +1,19 @@
-/*
+.columnParent {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.columnParent {
+    white-space: normal;
+    margin: 0;
+}
 
-If your plugin does not need CSS, delete this file.
+.cm-preview-code-block .admonition-content .columnParent p {
+    white-space: pre-wrap;
+}
 
-*/
+.columnChild {
+    flex-grow: 1;
+    flex-basis: 0px;
+    padding-right: 10px;
+}
