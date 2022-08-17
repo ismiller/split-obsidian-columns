@@ -24,11 +24,11 @@ export interface SettingItem {
 }
 
 export const DEFAULT_SETTINGS: ISplitColumnSettings = {
-	minWidth: { value: "100", name: "Minimum column width", description: "Столбцы будут иметь эту минимальную ширину перед переносом на новую строку. 0 отключает перенос столбцов. Полезно для небольших устройств." },
-	defaultSpan: { value: "1", name: "The default span of an item", description: "Ширина столбца по умолчанию. Если указана минимальная ширина, ширина столбца будет умножена на этот параметр." },
-	defaultBorderWidth: { value: "1", name: "Default border width", description: "Толщина границы, которая будет установлена, если не указаны иные настройки." },
-	defaultBorderColor: { value: "#000000", name: "Default border color", description: "Цвет границы, который будет установлен, если не указаны иные настройки." },
-	defaultBorderStyle: { value: "solid", name: "Default border style", description: "Стиль границы, который будет установлен, если не указаны иные настройки." },
+	minWidth: { value: "100", name: "Minimum column width", description: "Columns have a minimum sharpness before wrapping to a new line. 0 disables column wrapping. Useful for small devices." },
+	defaultSpan: { value: "1", name: "The default span of an item", description: "Default column width. If a minimum width is specified, the span will be multiplied by that column setting." },
+	defaultBorderWidth: { value: "1", name: "Default border width", description: "The thickness of the border that will be set if no other settings are specified." },
+	defaultBorderColor: { value: "#000000", name: "Default border color", description: "The color of the border that will be set if no other settings are specified." },
+	defaultBorderStyle: { value: "solid", name: "Default border style", description: "The style of the border that will be set if no other settings are specified." },
 }
 
 export interface ISplitColumnSettings {
