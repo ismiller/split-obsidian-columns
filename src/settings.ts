@@ -1,4 +1,4 @@
-import MyPlugin from 'main'
+import SplitColumnPlugin from 'main'
 import {Setting, PluginSettingTab, App} from 'obsidian'
 
 const NAME = "Split - Obsidian Columns";
@@ -26,15 +26,15 @@ export interface ISplitColumnSettings {
 }
 
 export class SplitSettingsTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: SplitColumnPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: SplitColumnPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
 
 	display(): void {
-		this.showSettings(DEFAULT_SETTINGS, NAME)
+		this.showSettings(DEFAULT_SETTINGS, NAME);
 	}
 
     private showSettings(DEFAULT_SETTINGS: any, name: string) {
@@ -62,25 +62,24 @@ export class SplitSettingsTab extends PluginSettingTab {
                 (this.plugin.settings as any)[entry[0]].value = value;
                 let saveData:any = {}
                 Object.entries(this.plugin.settings).forEach((i) => {
-                    saveData[i[0]] = (i[1] as SettingItem).value
+                    saveData[i[0]] = (i[1] as SettingItem).value;
                 })
                 this.plugin.saveData(saveData);
             })
-        )
+        );
     }
 }
 
 export function loadSettings(obj: any) {
-    obj.settings = DEFAULT_SETTINGS
+    obj.settings = DEFAULT_SETTINGS;
     obj.loadData().then((data: any) => {
         if (data) {
             let items = Object.entries(data)
-            console.log((obj.settings as any))
             items.forEach((item:[string, string]) => {
                 if ((obj.settings as any)[item[0]]) {
-                    (obj.settings as any)[item[0]].value = item[1]
+                    (obj.settings as any)[item[0]].value = item[1];
                 }
             })
         }
-    })
+    });
 }

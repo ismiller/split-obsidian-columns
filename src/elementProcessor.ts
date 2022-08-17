@@ -1,5 +1,6 @@
-import { ColumnStyleParser, IColumnStyle } from "./columnStyleParser";
-import { ISplitColumnSettings, SplitSettingsTab } from "./settings";
+import { IColumnStyle } from "./columnStyleParser";
+import { BORDER_TYPE_ALL } from "./constants";
+import { ISplitColumnSettings } from "./settings";
 
 
 export class ElementProcessor {
@@ -16,13 +17,15 @@ export class ElementProcessor {
 	}
 
 	public applyStyle(element: HTMLElement, style: IColumnStyle) {
+		let cssStyle = {} as CSSStyleDeclaration;
+
 		if(this.isBorderStyleSet(style)) {
 			for(let parameterItem  of style.selectedBorders) {
 				let prefix = `${parameterItem.cssTag}`;
-				this.applyBorderStyle(element, style, prefix);
+				this.setBorderStyle(element, style, prefix);
 			}
 		} else {
-			this.applyBorderStyle(element, style, `border`);
+			this.setBorderStyle(element, style, `border`);
 		}
 
 		if (style.colBackground) {
@@ -30,49 +33,19 @@ export class ElementProcessor {
 		} 
 
 		if (style.colPadding) {
-			element.style.setProperty(style.colPadding.cssTag, `${style.colPadding.value}px`)
+			element.style.setProperty(style.colPadding.cssTag, `${style.colPadding.value}px`);
 		}
 
-		let span = NaN;
-		if (style.colSpan) {
-			span = parseFloat(style.colSpan.value);
-		} else {
-			span = parseFloat(this.defaultSettings.defaultSpan.value);
-		}
-
-		if (isNaN(span)) {
-			span = 1;
-		}
-
-		let width = parseInt(this.defaultSettings.minWidth.value);
-
-		if (width == 0) {
-			width = 100;
-		}
-
-		Object.assign(element.style, this.generateCssString(width, span));
+		cssStyle = this.setColumnSize(style, cssStyle);
+		Object.assign(element.style, cssStyle);
 	}
 
 	public applyDefaultStyle(element: HTMLElement) {
-		let span = NaN;
-		if (this.defaultSettings.defaultSpan.value) {
-			span = parseFloat(this.defaultSettings.defaultSpan.value);
-		} 
+		let cssStyle = {} as CSSStyleDeclaration;
+		let emptyStyle = {} as IColumnStyle;
+		cssStyle = this.setColumnSize(emptyStyle, cssStyle);
 
-		if (isNaN(span)) {
-			span = 1;
-		}
-
-		let width = 0;
-		if (this.defaultSettings.minWidth.value) {
-			width = parseInt(this.defaultSettings.minWidth.value);
-		} 
-
-		if (width == 0) {
-			width = 100;
-		}
-
-		Object.assign(element.style, this.generateCssString(width, span));
+		Object.assign(element.style, cssStyle);
 	}
 
     private processTopElement(rootElement: HTMLElement) {
@@ -91,6 +64,7 @@ export class ElementProcessor {
 		while (lastChild != null) {
 			if ("style" in lastChild) {
 				lastChild.style.marginBottom = "0px";
+				lastChild.style.paddingBottom = "10px";
 			}
             
 			lastChild = this.nodeToHtmlElement(lastChild.lastChild);
@@ -102,10 +76,10 @@ export class ElementProcessor {
     }
 
 	private isBorderStyleSet(style: IColumnStyle): boolean {
-		return style.selectedBorders && style.selectedBorders.length > 0 && style.selectedBorders.find(b => b.key == "all") == undefined;
+		return style.selectedBorders && style.selectedBorders.length > 0 && style.selectedBorders.find(b => b.key == BORDER_TYPE_ALL) == undefined;
 	}
 
-	private applyBorderStyle(element: HTMLElement, style: IColumnStyle, prefix: string) {
+	private setBorderStyle(element: HTMLElement, style: IColumnStyle, prefix: string) {
 		if (style.borderWidth) {
 			element.style.setProperty(`${prefix}${style.borderWidth.cssTag}`, `${style.borderWidth.value}px`);												
 		} else {
@@ -128,11 +102,28 @@ export class ElementProcessor {
 		}
 	}
 
-	generateCssString (width: number, span: number): CSSStyleDeclaration {
-		let o = {} as CSSStyleDeclaration
-		o.flexGrow = span.toString()
-		o.flexBasis = (width * span).toString() + "px"
-		o.width = (width * span).toString() + "px"
-		return o
+	private setColumnSize (style: IColumnStyle, cssStyle: CSSStyleDeclaration): CSSStyleDeclaration {
+		let span = NaN;
+		if (style.colSpan) {
+			span = parseFloat(style.colSpan.value);
+		} else {
+			span = parseFloat(this.defaultSettings.defaultSpan.value);
+		}
+
+		if (isNaN(span)) {
+			span = 1;
+		}
+
+		let width = parseInt(this.defaultSettings.minWidth.value);
+
+		if (width == 0) {
+			width = 100;
+		}
+		
+		cssStyle.flexGrow = span.toString();
+		cssStyle.flexBasis = (width * span).toString() + "px";
+		cssStyle.width = (width * span).toString() + "px";
+
+		return cssStyle;
 	}
 }
