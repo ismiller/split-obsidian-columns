@@ -3,6 +3,20 @@ import {Setting, PluginSettingTab, App} from 'obsidian'
 
 const NAME = "Split - Obsidian Columns";
 
+type BorderStyleTypes = 'none' | 'dotted' | 'dashed' | 'solid' | 'double' | 'groove' | 'ridge' | 'inset' | 'outset';
+const BORDER_STYLE: Record<BorderStyleTypes, string> = {
+    none: `none`,
+    dotted: `dotted`,
+    dashed: `dashed`,
+    solid: `solid`, 
+    double: `double`, 
+    groove: `groove`,
+    ridge: `ridge`, 
+    inset: `inset`, 
+    outset: `outset`
+}
+
+
 export interface SettingItem {
 	value: string;
 	name: string;
@@ -10,11 +24,11 @@ export interface SettingItem {
 }
 
 export const DEFAULT_SETTINGS: ISplitColumnSettings = {
-	minWidth: { value: "100", name: "Минимальная ширина колонки", description: "Столбцы будут иметь эту минимальную ширину перед переносом на новую строку. 0 отключает перенос столбцов. Полезно для небольших устройств." },
-	defaultSpan: { value: "1", name: "Ширина столбца по умолчанию", description: "Ширина столбца по умолчанию. Если указана минимальная ширина, ширина столбца будет умножена на этот параметр." },
-	defaultBorderWidth: { value: "1", name: "Толщина границы по умолчанию", description: "Толщина границы, которая будет установлена, если не указаны иные настройки." },
-	defaultBorderColor: { value: "#000000", name: "Цвет границ по умолчанию", description: "Цвет границы, который будет установлен, если не указаны иные настройки." },
-	defaultBorderStyle: { value: "solid", name: "Стиль границы по умолчанию", description: "Стиль границы, который будет установлен, если не указаны иные настройки." },
+	minWidth: { value: "100", name: "Minimum column width", description: "Столбцы будут иметь эту минимальную ширину перед переносом на новую строку. 0 отключает перенос столбцов. Полезно для небольших устройств." },
+	defaultSpan: { value: "1", name: "The default span of an item", description: "Ширина столбца по умолчанию. Если указана минимальная ширина, ширина столбца будет умножена на этот параметр." },
+	defaultBorderWidth: { value: "1", name: "Default border width", description: "Толщина границы, которая будет установлена, если не указаны иные настройки." },
+	defaultBorderColor: { value: "#000000", name: "Default border color", description: "Цвет границы, который будет установлен, если не указаны иные настройки." },
+	defaultBorderStyle: { value: "solid", name: "Default border style", description: "Стиль границы, который будет установлен, если не указаны иные настройки." },
 }
 
 export interface ISplitColumnSettings {

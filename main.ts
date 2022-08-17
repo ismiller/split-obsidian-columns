@@ -1,28 +1,23 @@
 import { MarkdownPostProcessorContext, Plugin, } from 'obsidian';
 import { processDocument } from 'src/documentParser';
-import { loadSettings, SplitSettingsTab } from './src/settings';
-
+import { ISplitColumnSettings, loadSettings, SplitSettingsTab } from './src/settings';
 
 export default class SplitColumnPlugin extends Plugin {
 
-	settings: SplitSettingsTab;
+	settings: ISplitColumnSettings;
 
 	async onload() {
-		await this.loadSettings();
+		this.loadSettings();
 		let settingTab = new SplitSettingsTab(this.app, this);
 		this.addSettingTab(settingTab);
-		this.registerMarkdownPostProcessor(this.markdownPostProcessor);
+		this.registerMarkdownPostProcessor((element, context) => { processDocument(element, context, this) } );
 	}
 
 	onunload() {
 
 	}
 
-	async loadSettings() {
+	loadSettings() {
 		loadSettings(this);
-	}
-
-	markdownPostProcessor(element: HTMLElement, context: MarkdownPostProcessorContext) {
-		processDocument(element, context);
 	}
 }

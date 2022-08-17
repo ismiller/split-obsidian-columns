@@ -1,12 +1,13 @@
+import SplitColumnPlugin from "main";
 import { MarkdownPostProcessorContext, MarkdownRenderChild } from "obsidian";
 import { tryColumnStyleParse, trySplitStyleParse } from "./columnStyleParser";
 import { SPLIT_ITEM_TOKEN, SPLIT_TOKEN } from "./constants";
 import { ElementProcessor } from "./elementProcessor";
-import { DEFAULT_SETTINGS } from "./settings";
+import { DEFAULT_SETTINGS, ISplitColumnSettings } from "./settings";
 import { createRow, moveChildren } from "./utilities";
 
-export function processDocument(element: Element, context: MarkdownPostProcessorContext) {
-    let elementProcessor = new ElementProcessor(DEFAULT_SETTINGS);
+export function processDocument(element: Element, context: MarkdownPostProcessorContext, plugin: SplitColumnPlugin) {
+    let elementProcessor = new ElementProcessor(plugin.settings);
     processor(element, context, elementProcessor);
 }
 
@@ -18,7 +19,7 @@ function processor(element: Element, context: MarkdownPostProcessorContext, elem
 
         for (let items of Array.from(child.children)) {
             if (items && items!.textContent!.trim().startsWith(SPLIT_TOKEN) == false) {
-                processDocument(items, context);
+                processor(items, context, elementProcessor);
                 continue;
             }
 
